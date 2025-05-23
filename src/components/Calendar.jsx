@@ -15,6 +15,7 @@ import {
   setYear
 } from 'date-fns';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import EventInDate from './EventInDate';
 
 const months = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -32,14 +33,14 @@ const importanceBgColors = {
   high: 'bg-red-100',
   medium: 'bg-yellow-100',
   normal: 'bg-blue-100',
-  low: 'bg-gray-100',
+  low: 'bg-gray-200',
 };
 
 const importanceHoverBgColors = {
   high: 'hover:bg-red-200',
   medium: 'hover:bg-yellow-200',
   normal: 'hover:bg-blue-200',
-  low: 'hover:bg-gray-200',
+  low: 'hover:bg-gray-300',
 };
 
 const getYears = (range = 20) => {
@@ -51,6 +52,8 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events, setEvents] = useState([]);
+  const [popupDate, setPopupDate] = useState(null);
+  const [popupEvents, setPopupEvents] = useState([]);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('events') || '[]');
@@ -75,7 +78,18 @@ const Calendar = () => {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const onDateClick = (day) => {
-    setSelectedDate(day);
+    // Find events for this day
+    const dayEvents = events.filter(ev =>
+      ev.year === day.getFullYear() &&
+      ev.month === day.getMonth() &&
+      ev.date === day.getDate()
+    );
+    if (dayEvents.length > 0) {
+      setPopupDate(day);
+      setPopupEvents(dayEvents);
+    } else {
+      setSelectedDate(day);
+    }
   };
 
   const nextMonth = () => {
@@ -217,6 +231,13 @@ const Calendar = () => {
         ))}
         {renderDays()}
       </div>
+      {popupDate && (
+        <EventInDate
+          events={popupEvents}
+          date={popupDate}
+          onClose={() => setPopupDate(null)}
+        />
+      )}
     </div>
   );
 };
