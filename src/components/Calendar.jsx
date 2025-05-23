@@ -10,9 +10,21 @@ import {
   isSameDay,
   isToday,
   addMonths,
-  subMonths
+  subMonths,
+  setMonth,
+  setYear
 } from 'date-fns';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+const getYears = (range = 20) => {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: range }, (_, i) => currentYear - 10 + i);
+};
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -37,24 +49,56 @@ const Calendar = () => {
     setCurrentDate(subMonths(currentDate, 1));
   };
 
+  const handleMonthChange = (e) => {
+    const newMonth = parseInt(e.target.value, 10);
+    setCurrentDate(setMonth(currentDate, newMonth));
+  };
+
+  const handleYearChange = (e) => {
+    const newYear = parseInt(e.target.value, 10);
+    setCurrentDate(setYear(currentDate, newYear));
+  };
+
   const renderHeader = () => {
     return (
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={prevMonth}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
-        </button>
-        <h2 className="text-2xl font-semibold text-gray-800">
-          {format(currentDate, 'MMMM yyyy')}
-        </h2>
-        <button
-          onClick={nextMonth}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          <ChevronRightIcon className="h-6 w-6 text-gray-600" />
-        </button>
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+        <div className="flex items-center gap-2">
+          <select
+            className="rounded-lg border border-gray-300 p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            value={currentDate.getMonth()}
+            onChange={handleMonthChange}
+          >
+            {months.map((month, idx) => (
+              <option key={month} value={idx}>{month}</option>
+            ))}
+          </select>
+          <select
+            className="rounded-lg border border-gray-300 p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+            value={currentDate.getFullYear()}
+            onChange={handleYearChange}
+          >
+            {getYears().map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={prevMonth}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+          </button>
+          <h2 className="text-2xl font-semibold text-gray-800 min-w-[160px] text-center">
+            {format(currentDate, 'MMMM yyyy')}
+          </h2>
+          <button
+            onClick={nextMonth}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
       </div>
     );
   };
