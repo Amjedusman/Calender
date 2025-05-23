@@ -6,10 +6,10 @@ const months = [
 ];
 
 const importanceColors = {
-  high: 'bg-red-300',
-  medium: 'bg-yellow-300',
-  normal: 'bg-blue-300',
-  low: 'bg-gray-300',
+  high: 'bg-red-500',
+  medium: 'bg-yellow-400',
+  normal: 'bg-blue-400',
+  low: 'bg-gray-400',
 };
 
 const importanceLabels = {
@@ -41,15 +41,18 @@ const EventInDate = ({ events, date, onClose }) => {
         </h2>
         <div className="space-y-4">
           {events.map((event, idx) => (
-            <div key={idx} className={`rounded-lg p-4 shadow flex flex-col gap-2 border-l-4 ${importanceColors[event.importance]}`}>
-              <div className="flex items-center justify-between">
+            <div key={idx} className="rounded-lg p-4 shadow bg-gray-50 flex flex-col gap-2">
+              <div className="flex items-center justify-between mb-2">
                 <span className={`text-sm font-semibold text-white px-2 py-1 rounded ${importanceColors[event.importance]}`}>{importanceLabels[event.importance]}</span>
-                {isEventFinished(event) && <span className="text-xs text-gray-400 ml-2">(Finished)</span>}
+                {isEventFinished(event) && <span className="text-xs text-gray-500 ml-2">(Finished)</span>}
               </div>
-              <div className={`text-lg font-bold ${isEventFinished(event) ? 'line-through text-gray-400' : 'text-gray-800'}`}>{event.title}</div>
+              <div className="flex items-center gap-2">
+                 <div className={`w-3 h-3 rounded-full ${importanceColors[event.importance]}`} title={importanceLabels[event.importance]}></div>
+                 <div className={`text-lg font-bold ${isEventFinished(event) ? 'line-through text-gray-500' : 'text-gray-800'}`}>{event.title}</div>
+              </div>
               <div className="flex flex-wrap gap-2 text-xs text-gray-600">
                 <span className="bg-gray-100 px-2 py-1 rounded">{event.startTime} - {event.endTime}</span>
-                <span className="bg-gray-100 px-2 py-1 rounded">{event.date} {months[event.month]} {event.year}</span>
+                {/* <span className="bg-gray-100 px-2 py-1 rounded">{event.date} {months[event.month]} {event.year}</span> */}
               </div>
             </div>
           ))}

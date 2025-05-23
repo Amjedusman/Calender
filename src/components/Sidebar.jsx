@@ -11,7 +11,7 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
 
-const Sidebar = ({ isCollapsed, onToggle }) => {
+const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeItem, setActiveItem] = useState(location.pathname);
@@ -19,7 +19,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
   const menuItems = [
     { id: '/', label: 'Home', icon: HomeIcon },
     { id: '/events', label: 'Manage Events', icon: CalendarIcon },
-    { id: '/notifications', label: 'Notifications', icon: BellIcon },
+    { id: '/notifications', label: 'Notifications', icon: BellIcon, notificationCount: upcomingNotificationCount },
     { id: '/payments', label: 'Payments', icon: CreditCardIcon },
     { id: '/profile', label: 'Profile', icon: UserIcon },
     { id: '/settings', label: 'Settings', icon: CogIcon },
@@ -68,7 +68,12 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
                   >
                     <Icon className={`h-6 w-6 flex-shrink-0 ${activeItem === item.id ? 'text-white' : 'text-gray-400'}`} />
                     {!isCollapsed && (
-                      <span className="font-medium">{item.label}</span>
+                      <span className="font-medium flex-1 text-left">{item.label}</span>
+                    )}
+                    {!isCollapsed && item.notificationCount > 0 && (
+                      <span className="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full">
+                        {item.notificationCount}
+                      </span>
                     )}
                   </button>
                 </li>
