@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   HomeIcon, 
   CalendarIcon, 
@@ -11,16 +12,23 @@ import {
 } from '@heroicons/react/24/outline';
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
-  const [activeItem, setActiveItem] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeItem, setActiveItem] = useState(location.pathname);
 
   const menuItems = [
-    { id: 'home', label: 'Home', icon: HomeIcon },
-    { id: 'events', label: 'Manage Events', icon: CalendarIcon },
-    { id: 'notifications', label: 'Notifications', icon: BellIcon },
-    { id: 'payments', label: 'Payments', icon: CreditCardIcon },
-    { id: 'profile', label: 'Profile', icon: UserIcon },
-    { id: 'settings', label: 'Settings', icon: CogIcon },
+    { id: '/', label: 'Home', icon: HomeIcon },
+    { id: '/events', label: 'Manage Events', icon: CalendarIcon },
+    { id: '/notifications', label: 'Notifications', icon: BellIcon },
+    { id: '/payments', label: 'Payments', icon: CreditCardIcon },
+    { id: '/profile', label: 'Profile', icon: UserIcon },
+    { id: '/settings', label: 'Settings', icon: CogIcon },
   ];
+
+  const handleNavigation = (path) => {
+    setActiveItem(path);
+    navigate(path);
+  };
 
   return (
     <div className={`fixed left-0 top-0 h-screen bg-gray-800 text-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
@@ -51,7 +59,7 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
               return (
                 <li key={item.id}>
                   <button
-                    onClick={() => setActiveItem(item.id)}
+                    onClick={() => handleNavigation(item.id)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                       activeItem === item.id
                         ? 'bg-blue-600 text-white shadow-md'
