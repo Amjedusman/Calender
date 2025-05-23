@@ -18,7 +18,7 @@ function App() {
           isCollapsed={isSidebarCollapsed} 
           onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
         />
-        <div className={`flex-1 transition-all duration-300 ${isSidebarCollapsed ? 'pl-20' : 'pl-64'}`}>
+        <div className={`flex-1 transition-all duration-500 ${isSidebarCollapsed ? 'pl-20' : 'pl-64'}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<ManageEvents />} />
