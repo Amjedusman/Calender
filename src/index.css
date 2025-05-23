@@ -68,3 +68,27 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Add animation for route transitions */
+.route-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.route-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 1000ms ease-out, transform 1000ms ease-out;
+}
+
+/* You might not need exit classes for this effect, but here they are for completeness */
+.route-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.route-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 1000ms ease-in, transform 1000ms ease-in;
+}

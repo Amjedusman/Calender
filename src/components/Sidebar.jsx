@@ -16,13 +16,16 @@ const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState(location.pathname);
 
-  const menuItems = [
+  const topMenuItems = [
     { id: '/', label: 'Home', icon: HomeIcon },
     { id: '/events', label: 'Manage Events', icon: CalendarIcon },
     { id: '/notifications', label: 'Notifications', icon: BellIcon, notificationCount: upcomingNotificationCount },
     { id: '/payments', label: 'Payments', icon: CreditCardIcon },
-    { id: '/profile', label: 'Profile', icon: UserIcon },
     { id: '/settings', label: 'Settings', icon: CogIcon },
+  ];
+
+  const bottomMenuItems = [
+    { id: '/profile', label: 'Profile', icon: UserIcon },
   ];
 
   const handleNavigation = (path) => {
@@ -32,7 +35,7 @@ const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
 
   return (
     <div className={`fixed left-0 top-0 h-screen bg-gray-800 text-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
-      <div className="p-4">
+      <div className="p-4 flex flex-col h-full">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg">
@@ -52,9 +55,11 @@ const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
             )}
           </button>
         </div>
-        <nav>
+        
+        {/* Main Menu Items (Top) */}
+        <nav className="flex-1">
           <ul className="space-y-3">
-            {menuItems.map((item) => {
+            {topMenuItems.map((item) => {
               const Icon = item.icon;
               return (
                 <li key={item.id}>
@@ -74,6 +79,32 @@ const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
                       <span className="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full">
                         {item.notificationCount}
                       </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Bottom Menu Items (Profile) */}
+        <nav className="mt-auto">
+          <ul className="space-y-3">
+            {bottomMenuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleNavigation(item.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      activeItem === item.id
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-gray-500 hover:bg-gray-700 hover:text-white'
+                    }`}
+                  >
+                    <Icon className={`h-6 w-6 flex-shrink-0 ${activeItem === item.id ? 'text-white' : 'text-gray-400'}`} />
+                    {!isCollapsed && (
+                      <span className="font-medium flex-1 text-left">{item.label}</span>
                     )}
                   </button>
                 </li>
