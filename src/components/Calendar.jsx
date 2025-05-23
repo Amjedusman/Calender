@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   format,
   startOfMonth,
@@ -21,6 +21,27 @@ const months = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
+const importanceColors = {
+  high: 'bg-red-600',
+  medium: 'bg-yellow-500',
+  normal: 'bg-blue-400',
+  low: 'bg-gray-400',
+};
+
+const importanceBgColors = {
+  high: 'bg-red-100',
+  medium: 'bg-yellow-100',
+  normal: 'bg-blue-100',
+  low: 'bg-gray-100',
+};
+
+const importanceHoverBgColors = {
+  high: 'hover:bg-red-200',
+  medium: 'hover:bg-yellow-200',
+  normal: 'hover:bg-blue-200',
+  low: 'hover:bg-gray-200',
+};
+
 const getYears = (range = 20) => {
   const currentYear = new Date().getFullYear();
   return Array.from({ length: range }, (_, i) => currentYear - 10 + i);
@@ -29,6 +50,22 @@ const getYears = (range = 20) => {
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('events') || '[]');
+    setEvents(stored);
+  }, [currentDate]);
+
+  const isEventFinished = (event) => {
+    const endDate = new Date(
+      event.year,
+      event.month,
+      event.date,
+      ...(event.endTime ? event.endTime.split(':') : [23, 59])
+    );
+    return endDate < new Date();
+  };
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -110,18 +147,29 @@ const Calendar = () => {
     while (day <= endDate) {
       const formattedDate = format(day, 'd');
       const cloneDay = day;
+      // Find events for this day
+      const dayEvents = events.filter(ev =>
+        ev.year === day.getFullYear() &&
+        ev.month === day.getMonth() &&
+        ev.date === day.getDate()
+      );
+      // Sort events by importance (high to low)
+      const sortedDayEvents = [...dayEvents].sort((a, b) => {
+        const order = { high: 0, medium: 1, normal: 2, low: 3 };
+        return (order[a.importance] ?? 4) - (order[b.importance] ?? 4);
+      });
+      const mostImportant = sortedDayEvents[0];
+      const cellBg = mostImportant ? importanceBgColors[mostImportant.importance] : '';
+      const hoverBg = mostImportant ? importanceHoverBgColors[mostImportant.importance] : 'hover:bg-gray-50';
       days.push(
         <div
           key={day.toString()}
-          className={`relative p-2 h-24 border border-gray-200 ${
-            !isSameMonth(day, monthStart)
+          className={`relative p-2 h-28 border border-gray-200 flex flex-col
+            ${!isSameMonth(day, monthStart)
               ? 'bg-gray-50 text-gray-400'
-              : 'bg-white hover:bg-gray-50'
-          } ${
-            isSameDay(day, selectedDate)
-              ? 'bg-blue-50 border-blue-500'
-              : ''
-          }`}
+              : `bg-white ${cellBg} ${hoverBg}`}
+            ${isSameDay(day, selectedDate) ? 'bg-blue-50 border-blue-500' : ''}
+          `}
           onClick={() => onDateClick(cloneDay)}
         >
           <span
@@ -133,7 +181,21 @@ const Calendar = () => {
           >
             {formattedDate}
           </span>
-          {/* Add event indicators here if needed */}
+          {/* Event titles under the date */}
+          <div className="flex flex-col gap-1 mt-1">
+            {sortedDayEvents.slice(0, 2).map((ev, i) => (
+              <span
+                key={i}
+                className={`truncate px-1 py-0.5 rounded text-xs font-medium text-white ${importanceColors[ev.importance]} ${isEventFinished(ev) ? 'line-through bg-gray-400 opacity-70' : ''}`}
+                title={ev.title + (isEventFinished(ev) ? ' (Event finished)' : '')}
+              >
+                {ev.title}
+              </span>
+            ))}
+            {sortedDayEvents.length > 2 && (
+              <span className="text-xs text-gray-500">more</span>
+            )}
+          </div>
         </div>
       );
       day = addDays(day, 1);
