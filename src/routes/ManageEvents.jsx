@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import EventForm from '../components/EventForm';
+import EventList from '../components/EventList';
 
 const ManageEvents = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleAddEvent = (eventData) => {
-    // You can handle event submission here (e.g., save to state or backend)
-    // For now, just close the modal
+    // Get existing events from localStorage or initialize as empty array
+    const existing = JSON.parse(localStorage.getItem('events') || '[]');
+    // Append the new event
+    const updated = [...existing, eventData];
+    // Save back to localStorage
+    localStorage.setItem('events', JSON.stringify(updated));
     setShowForm(false);
+    setShowFeedback(true);
+    setTimeout(() => setShowFeedback(false), 1500);
+    setRefreshKey(k => k + 1);
+  };
+
+  const handleDelete = () => {
+    setRefreshKey(k => k + 1);
   };
 
   return (
@@ -29,6 +43,12 @@ const ManageEvents = () => {
           </div>
         </div>
       )}
+      {showFeedback && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all">
+          Event added successfully!
+        </div>
+      )}
+      <EventList refreshKey={refreshKey} onDelete={handleDelete} />
     </div>
   );
 };
