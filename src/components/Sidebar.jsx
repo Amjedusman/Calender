@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import viteLogo from '/vite.svg';
 import { 
   HomeIcon, 
   CalendarIcon, 
@@ -37,12 +38,18 @@ const Sidebar = ({ isCollapsed, onToggle, upcomingNotificationCount }) => {
     <div className={`fixed left-0 top-0 h-screen bg-gray-800 text-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
       <div className="p-4 flex flex-col h-full">
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg">
-              <span className="text-2xl font-bold">C</span>
-            </div>
-            {!isCollapsed && <h1 className="text-2xl font-bold">Calendar</h1>}
-          </div>
+          {/* Logo and Title - Clickable */}          
+          {!isCollapsed && (
+            <button
+              onClick={() => handleNavigation('/')}
+              className="flex items-center space-x-3 text-white focus:outline-none bg-gray-800"
+            >
+              <img src={viteLogo} className="w-8 h-8" alt="Vite logo" />
+              <h1 className="text-2xl font-bold">Eventra</h1>
+            </button>
+          )}
+
+          {/* Toggle Button */}
           <button 
             onClick={onToggle}
             className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors shadow-md"

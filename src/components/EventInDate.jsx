@@ -8,7 +8,7 @@ const months = [
 const importanceColors = {
   high: 'bg-red-500',
   medium: 'bg-yellow-400',
-  normal: 'bg-blue-400',
+  normal: 'bg-blue-500',
   low: 'bg-gray-400',
 };
 

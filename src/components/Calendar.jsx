@@ -32,14 +32,14 @@ const importanceColors = {
 const importanceBgColors = {
   high: 'bg-red-100',
   medium: 'bg-yellow-100',
-  normal: 'bg-blue-100',
+  normal: 'bg-blue-200',
   low: 'bg-gray-200',
 };
 
 const importanceHoverBgColors = {
   high: 'hover:bg-red-200',
   medium: 'hover:bg-yellow-200',
-  normal: 'hover:bg-blue-200',
+  normal: 'hover:bg-blue-300',
   low: 'hover:bg-gray-300',
 };
 
