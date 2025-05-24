@@ -180,9 +180,9 @@ const Calendar = () => {
           key={day.toString()}
           className={`relative p-2 h-28 border border-gray-200 flex flex-col
             ${!isSameMonth(day, monthStart)
-              ? 'bg-gray-50 text-gray-400'
-              : `bg-white ${cellBg} ${hoverBg}`}
-            ${isSameDay(day, selectedDate) ? 'bg-blue-50 border-blue-500' : ''}
+              ? 'bg-gray-50 dark:bg-gray-700 text-gray-400 dark:text-gray-500'
+              : `bg-white dark:bg-gray-800 ${cellBg} ${hoverBg}`}
+            ${isSameDay(day, selectedDate) ? 'bg-blue-50 dark:bg-blue-900 border-blue-500' : ''}
           `}
           onClick={() => onDateClick(cloneDay)}
         >
@@ -190,7 +190,7 @@ const Calendar = () => {
             className={`text-sm ${
               isToday(day)
                 ? 'bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center'
-                : ''
+                : 'text-gray-900 dark:text-gray-100'
             }`}
           >
             {formattedDate}
@@ -207,7 +207,7 @@ const Calendar = () => {
               </span>
             ))}
             {sortedDayEvents.length > 2 && (
-              <span className="text-xs text-gray-500">more</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">more</span>
             )}
           </div>
         </div>
@@ -218,13 +218,13 @@ const Calendar = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
       {renderHeader()}
       <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
         {weekDays.map((day) => (
           <div
             key={day}
-            className="bg-gray-100 p-2 text-center text-sm font-semibold text-gray-600"
+            className="bg-gray-100 dark:bg-gray-700 p-2 text-center text-sm font-semibold text-gray-600 dark:text-gray-300"
           >
             {day}
           </div>
